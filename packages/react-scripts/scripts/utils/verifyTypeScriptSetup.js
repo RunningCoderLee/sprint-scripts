@@ -22,7 +22,10 @@ function writeJson(fileName, object) {
 }
 
 function verifyNoTypeScript() {
-  const typescriptFiles = globby(['**/*.(ts|tsx)', '!**/node_modules', '!**/*.d.ts'], { cwd: paths.appSrc });
+  const typescriptFiles = globby(
+    ['**/*.(ts|tsx)', '!**/node_modules', '!**/*.d.ts'],
+    { cwd: paths.appSrc }
+  );
   if (typescriptFiles.length > 0) {
     console.warn(
       chalk.yellow(
@@ -248,11 +251,11 @@ function verifyTypeScriptSetup() {
     writeJson(paths.appTsConfig, appTsConfig);
   }
 
-  // Reference `react-scripts` types
+  // Reference `sprint-scripts` types
   if (!fs.existsSync(paths.appTypeDeclarations)) {
     fs.writeFileSync(
       paths.appTypeDeclarations,
-      `/// <reference types="react-scripts" />${os.EOL}`
+      `/// <reference types="sprint-scripts" />${os.EOL}`
     );
   }
 }
