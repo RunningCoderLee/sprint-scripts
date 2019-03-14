@@ -95,9 +95,9 @@ module.exports = function(
 
   // Setup the script rules
   appPackage.scripts = {
-    start: 'sprint-scripts start',
-    build: 'sprint-scripts build',
-    test: 'sprint-scripts test',
+    start: 'react-app-rewired start --scripts-version sprint-scripts',
+    build: 'react-app-rewired build --scripts-version sprint-scripts',
+    test: 'react-app-rewired test --scripts-version sprint-scripts',
     eject: 'sprint-scripts eject',
   };
 
