@@ -1,0 +1,17 @@
+build/
+
+config/
+
+node_modules/
+
+public/
+
+scripts/
+
+src/serviceWorker.ts
+
+src/setupTests.ts
+
+config-overrides.js
+
+react-app-env.d.ts

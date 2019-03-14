@@ -99,11 +99,12 @@ module.exports = function(
     build: 'react-app-rewired build --scripts-version sprint-scripts',
     test: 'react-app-rewired test --scripts-version sprint-scripts',
     eject: 'sprint-scripts eject',
+    'eslint-check': 'eslint --print-config . | eslint-config-prettier-check',
   };
 
   // Setup the eslint config
   appPackage.eslintConfig = {
-    extends: 'react-app',
+    extends: 'air-bnb',
   };
 
   // Setup the browsers list

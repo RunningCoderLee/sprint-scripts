@@ -1,14 +1,15 @@
-const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
+const { override, useEslintRc, enableEslintTypescript } = require('customize-cra')
+const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 
 const addLessLoader = (loaderOptions = {}) => (config, env) => {
   // Need these for production mode, which are copied from react-scripts
-  const publicPath = require('sprint-scripts/config/paths').servedPath;
-  const shouldUseRelativeAssetPaths = publicPath === './';
-  const isEnvDevelopment = env === 'development';
-  const isEnvProduction = env === 'production';
-  const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-  const lessRegex = /\.less$/;
-  const lessModuleRegex = /\.module\.less$/;
+  const publicPath = require('sprint-scripts/config/paths').servedPath
+  const shouldUseRelativeAssetPaths = publicPath === './'
+  const isEnvDevelopment = env === 'development'
+  const isEnvProduction = env === 'production'
+  const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
+  const lessRegex = /\.less$/
+  const lessModuleRegex = /\.module\.less$/
 
   const getLessLoader = cssOptions => {
     return [
@@ -46,11 +47,10 @@ const addLessLoader = (loaderOptions = {}) => (config, env) => {
           source: isEnvProduction && shouldUseSourceMap,
         }),
       },
-    ].filter(Boolean);
-  };
+    ].filter(Boolean)
+  }
 
-  const loaders = config.module.rules.find(rule => Array.isArray(rule.oneOf))
-    .oneOf;
+  const loaders = config.module.rules.find(rule => Array.isArray(rule.oneOf)).oneOf
 
   // Insert less-loader as the penultimate item of loaders (before file-loader)
   loaders.splice(
@@ -74,20 +74,20 @@ const addLessLoader = (loaderOptions = {}) => (config, env) => {
         getLocalIdent: getCSSModuleLocalIdent,
       }),
     }
-  );
+  )
 
-  return config;
-};
+  return config
+}
 
 const webpack = (config, env) => {
-  const configuration = addLessLoader()(config, env);
+  const customConfig = override(addLessLoader(), enableEslintTypescript(), useEslintRc())
 
-  return configuration;
-};
+  return customConfig(config, env)
+}
 
 const devServer = configFunction => {
   return (proxy, allowedHost) => {
-    const config = configFunction(proxy, allowedHost);
+    const config = configFunction(proxy, allowedHost)
     // const fs = require('fs');
     // config.https = {
     //   key: fs.readFileSync(process.env.REACT_HTTPS_KEY, 'utf8'),
@@ -97,13 +97,13 @@ const devServer = configFunction => {
     // };
 
     // Return your customised Webpack Development Server config.
-    return config;
-  };
-};
+    return config
+  }
+}
 
-const jest = config => config;
+const jest = config => config
 
-const pathsOverride = (paths, env) => paths;
+const pathsOverride = (paths, env) => paths
 
 module.exports = {
   // The Webpack config to use when compiling your react app for development or production.
@@ -117,4 +117,4 @@ module.exports = {
   devServer,
   // The paths config to use when compiling your react app for development or production.
   paths: pathsOverride,
-};
+}
