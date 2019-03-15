@@ -4,6 +4,7 @@
     "@types/history": null,
     "@types/react-router-dom": null,
     "history": null,
-    "react-router-dom": null
+    "react-router-dom": null,
+    "axios": null
   }
 }
