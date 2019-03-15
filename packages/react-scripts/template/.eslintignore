@@ -8,8 +8,8 @@ public/
 
 scripts/
 
-src/serviceWorker.ts
+src/serviceWorker.js
 
-src/setupTests.ts
+src/setupTests.js
 
 config-overrides.js
