@@ -1,25 +1,25 @@
-.App {
+.app {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
+.app-logo {
   height: 40vmin;
+  animation: App-logo-spin infinite 20s linear;
   pointer-events: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #fff;
   font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #282c34;
 }
 
-.App-link {
+.app-link {
   color: #61dafb;
 }
 

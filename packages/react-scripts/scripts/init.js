@@ -53,9 +53,12 @@ function tryGitInit(appPath) {
     didInit = true;
 
     execSync('git add -A', { stdio: 'ignore' });
-    execSync('git commit -m "Initial commit from Create React App"', {
-      stdio: 'ignore',
-    });
+    execSync(
+      'git commit -m "chore(init): initial commit from create react pp"',
+      {
+        stdio: 'ignore',
+      }
+    );
     return true;
   } catch (e) {
     if (didInit) {
@@ -71,6 +74,44 @@ function tryGitInit(appPath) {
         // Ignore.
       }
     }
+    return false;
+  }
+}
+
+function tryInstallHusky(appPath, command) {
+  let didInstall = false;
+
+  console.log();
+  console.log(`Installing ${chalk.cyan('husky')} as dev dependency.`);
+  console.log();
+
+  const huskyProc = spawn.sync(command, ['add', '-D', '-E', 'husky'], {
+    stdio: 'inherit',
+  });
+
+  if (huskyProc.status !== 0) {
+    console.error(
+      `\`${command} ${['add', '-D', '-E', 'husky'].join(' ')}\` failed`
+    );
+    return didInstall;
+  }
+
+  didInstall = true;
+
+  try {
+    // Reusing the initialized commit to include changes in the package.json
+    execSync('git add -A', { stdio: 'ignore' });
+    execSync('git commit --amend --no-edit', {
+      stdio: 'ignore',
+    });
+    console.log();
+    console.log('Amend initial commit success.');
+
+    return true;
+  } catch (err) {
+    console.log();
+    console.log(err);
+
     return false;
   }
 }
@@ -100,6 +141,8 @@ module.exports = function(
     test: 'react-app-rewired test --scripts-version sprint-scripts',
     eject: 'sprint-scripts eject',
     'eslint-check': 'eslint --print-config . | eslint-config-prettier-check',
+    'stylelint-check': 'stylelint-config-prettier-check',
+    'lint-staged': 'lint-staged',
   };
 
   // Setup the eslint config
@@ -109,6 +152,30 @@ module.exports = function(
 
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
+
+  // Setup the husky
+  appPackage.husky = {
+    hooks: {
+      'pre-commit': 'lint-staged',
+      'commit-msg': 'commitlint -E HUSKY_GIT_PARAMS',
+    },
+  };
+
+  // Setup the lint-staged
+  appPackage['lint-staged'] = {
+    'src/**/*.{js,jsx,ts,tsx}': [
+      'cross-env NODE_ENV=production eslint --fix',
+      'git add',
+    ],
+    'src/**/*.css': ['stylelint --fix', 'git add'],
+    'src/**/*.scss': ['stylelint --syntax=scss --fix', 'git add'],
+    'src/**/*.less': ['stylelint --syntax=less --fix', 'git add'],
+  };
+
+  // Setup the commitlint
+  appPackage.commitlint = {
+    extends: ['@commitlint/config-conventional'],
+  };
 
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
@@ -186,6 +253,7 @@ module.exports = function(
   // which doesn't install react and react-dom along with sprint-scripts
   // or template is presetend (via --internal-testing-template)
   if (!isReactInstalled(appPackage) || template) {
+    args.push('react', 'react-dom');
     console.log(`Installing react and react-dom using ${command}...`);
     console.log();
 
@@ -204,6 +272,8 @@ module.exports = function(
     console.log();
     console.log('Initialized a git repository.');
   }
+
+  tryInstallHusky(appPath, command);
 
   // Display the most elegant way to cd.
   // This needs to handle an undefined originalDirectory for
