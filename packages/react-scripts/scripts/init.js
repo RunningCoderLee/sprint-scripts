@@ -227,12 +227,11 @@ module.exports = function(
 
   if (useYarn) {
     command = 'yarnpkg';
-    args = ['add'];
+    args = ['add', '-E'];
   } else {
     command = 'npm';
     args = ['install', '--save', verbose && '--verbose'].filter(e => e);
   }
-  args.push('react', 'react-dom');
 
   // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(
@@ -243,7 +242,11 @@ module.exports = function(
     const templateDependencies = require(templateDependenciesPath).dependencies;
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
+        if (templateDependencies[key]) {
+          return `${key}@${templateDependencies[key]}`;
+        }
+
+        return key;
       })
     );
     fs.unlinkSync(templateDependenciesPath);
@@ -253,15 +256,20 @@ module.exports = function(
   // which doesn't install react and react-dom along with sprint-scripts
   // or template is presetend (via --internal-testing-template)
   if (!isReactInstalled(appPackage) || template) {
-    args.push('react', 'react-dom');
     console.log(`Installing react and react-dom using ${command}...`);
     console.log();
+    args.push('react', 'react-dom');
+  }
 
-    const proc = spawn.sync(command, args, { stdio: 'inherit' });
-    if (proc.status !== 0) {
-      console.error(`\`${command} ${args.join(' ')}\` failed`);
-      return;
-    }
+  console.log();
+  console.log(
+    chalk.cyan('Installing dependencies from .template.dependencies.json')
+  );
+  console.log();
+  const proc = spawn.sync(command, args, { stdio: 'inherit' });
+  if (proc.status !== 0) {
+    console.error(`\`${command} ${args.slice(1).join(', ')}\` failed`);
+    return;
   }
 
   if (useTypeScript) {

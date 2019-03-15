@@ -1,5 +1,6 @@
-const { override, useEslintRc, enableEslintTypescript } = require('customize-cra')
+const { override, useEslintRc, enableEslintTypescript, addWebpackAlias } = require('customize-cra')
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
+const path = require('path')
 
 const addLessLoader = (loaderOptions = {}) => (config, env) => {
   // Need these for production mode, which are copied from react-scripts
@@ -80,7 +81,12 @@ const addLessLoader = (loaderOptions = {}) => (config, env) => {
 }
 
 const webpack = (config, env) => {
-  const customConfig = override(addLessLoader(), enableEslintTypescript(), useEslintRc())
+  const customConfig = override(
+    addLessLoader(),
+    enableEslintTypescript(),
+    useEslintRc(),
+    addWebpackAlias({ '-': path.resolve(__dirname, 'src') })
+  )
 
   return customConfig(config, env)
 }

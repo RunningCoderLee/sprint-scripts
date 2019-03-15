@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "antd": null,
+    "@types/history": null,
+    "@types/react-router-dom": null,
+    "history": null,
+    "react-router-dom": null
+  }
+}

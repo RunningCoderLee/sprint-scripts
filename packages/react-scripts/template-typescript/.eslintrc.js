@@ -98,6 +98,8 @@ const baseRules = {
       optionalDependencies: false,
     },
   ],
+  'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+  'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
 }
 
 const prodRules = Object.assign({}, baseRules, {
@@ -121,6 +123,7 @@ const prodRules = Object.assign({}, baseRules, {
 
 module.exports = {
   root: true,
+  plugins: ['react-hooks'],
   extends: [
     'airbnb',
     'plugin:@typescript-eslint/recommended',
