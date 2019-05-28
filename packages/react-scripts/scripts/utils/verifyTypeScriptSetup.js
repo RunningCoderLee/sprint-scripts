@@ -132,14 +132,14 @@ function verifyTypeScriptSetup() {
     // We do not support absolute imports, though this may come as a future
     // enhancement
     baseUrl: {
-      value: '.',
+      suggested: 'src',
       // value: 'undefined',
       // reason: 'absolute imports are not supported (yet)',
     },
     // paths: { value: undefined, reason: 'aliased imports are not supported' },
     paths: {
-      value: {
-        '-/*': ['src/*'],
+      suggested: {
+        '-/*': ['./*'],
       },
     },
   };

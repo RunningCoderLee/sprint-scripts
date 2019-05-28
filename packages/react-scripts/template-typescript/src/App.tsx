@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Router } from 'react-router-dom'
 import history from '-/utils/history'
 import Routes from '-/routes'
 
-const App: React.FC = () => (
+const App = (): ReactElement => (
   <Router history={history}>
     <Routes />
   </Router>
